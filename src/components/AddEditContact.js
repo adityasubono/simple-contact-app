@@ -1,9 +1,11 @@
 import React, { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { createContact } from "../actions/contact";
+import {createContact, updateContact} from "../actions/contact";
 import ContactService from "../services/ContactService";
+import { useHistory } from "react-router-dom"
 
-const AddContact = (props) => {
+const AddEditContact = (props) => {
+    let history = useHistory()
     const { id } = props.match.params;
     const isAddMode = !id;
     const initialContactState = {
@@ -24,9 +26,13 @@ const AddContact = (props) => {
     };
 
     const saveContact = () => {
-        const { firstName, lastName, age, photo } = contact;
+        isAddMode ?
+            addNewContact() : updateContacts()
+    };
 
-        dispatch(createContact(firstName, lastName,age,photo))
+    const addNewContact = () => {
+        const {firstName, lastName, age, photo} = contact;
+        dispatch(createContact(firstName, lastName, age, photo))
             .then(data => {
                 setContact({
                     id: data.id,
@@ -42,6 +48,19 @@ const AddContact = (props) => {
             .catch(e => {
                 console.log(e);
             });
+    }
+
+    const updateContacts = () => {
+        const {firstName, lastName, age, photo} = contact;
+        dispatch(updateContact(contact.id, {firstName, lastName, age, photo}))
+            .then(response => {
+                console.log(response);
+                setSubmitted(true);
+                history.push("/contact" , {submitted : true})
+            })
+            .catch(e => {
+                console.log(e);
+            });
     };
 
     const newContact = () => {
@@ -49,31 +68,39 @@ const AddContact = (props) => {
         setSubmitted(false);
     };
 
-    const getContact = id => {
-        ContactService.get(id)
-            .then(response => {
-                setContact(response.data);
-                console.log("auoo",response.data);
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
-
     useEffect(() => {
+        console.log("props" , props)
         if (!isAddMode) {
-            getContact(props.match.params.id);
+            const getContact = id => {
+                ContactService.get(id)
+                    .then(response => {
+                        setContact(response.data.data);
+                        console.log("auoo",response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            };
+            getContact(props.match.params.id)
         }
     }, []);
 
     return (
         <div className="submit-form">
             <h1>{isAddMode ? 'Add User' : 'Edit User'}</h1>
-            {submitted ? (
+            {submitted  ? (
                 <div>
-                    <h4>You submitted successfully!</h4>
+                    {isAddMode?
+                        <div className="alert alert-success" role="alert">
+                            You submitted successfully!
+                        </div>
+                        :
+                        <div className="alert alert-success" role="alert">
+                            The contact was updated successfully!
+                        </div>
+                    }
                     <button className="btn btn-success" onClick={newContact}>
-                        Add
+                        Add New Contact
                     </button>
                 </div>
             ) : (
@@ -139,4 +166,4 @@ const AddContact = (props) => {
     );
 };
 
-export default AddContact;
+export default AddEditContact;
