@@ -47,5 +47,8 @@
   },
   "devDependencies": {
     "redux-devtools-extension": "^2.13.9"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
