@@ -6,8 +6,6 @@ import {
 } from "../actions/contact";
 
 const ContactList = (props) => {
-    // const { submitted } = props.location.state.submitted;
-    // const notSubmitted = !submitted;
     const [currentContact, setCurrentContact] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [alert, setAlert] = useState(false)
