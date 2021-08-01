@@ -2,7 +2,7 @@ import {
     CREATE_CONTACT,
     RETRIEVE_CONTACT,
     UPDATE_CONTACT,
-    DELETE_CONTACT
+    DELETE_CONTACT, RETRIEVE_CONTACT_LOADING
 } from "./types";
 
 import ContactDataService from "../services/ContactService";
@@ -28,11 +28,19 @@ export const retrieveContact = () => async (dispatch) => {
         dispatch({
             type: RETRIEVE_CONTACT,
             payload: res.data.data,
+            loading: false
         });
     } catch (err) {
         console.log(err);
     }
 };
+
+export const retrieveContactLoading = (payload) => {
+    return {
+        type: RETRIEVE_CONTACT_LOADING,
+        payload
+    }
+}
 
 export const updateContact = (id, data) => async (dispatch) => {
     try {

@@ -2,8 +2,9 @@ import React, {useState, useEffect, useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     deleteContact,
-    retrieveContact,
+    retrieveContact, retrieveContactLoading,
 } from "../actions/contact";
+import SkeletonLoader from "./SkeletonLoader";
 
 const ContactList = (props) => {
     const [currentContact, setCurrentContact] = useState(null);
@@ -11,6 +12,7 @@ const ContactList = (props) => {
     const [alert, setAlert] = useState(false)
 
     const contact = useSelector(state => state.contact);
+    const loading = useSelector(state => state.contact.payload)
     const dispatch = useDispatch();
 
     const initFetch = useCallback(() => {
@@ -18,12 +20,7 @@ const ContactList = (props) => {
     }, [dispatch])
     useEffect(() => {
         initFetch()
-        console.log("ahdjkadjkah ", props)
-        // if (!notSubmitted) {
-        //     setAlert(true)
-        // }
-
-
+        console.log("contact state ", contact)
     }, [initFetch])
 
     const setActiveContact = (contacts, index) => {
@@ -32,6 +29,7 @@ const ContactList = (props) => {
     };
 
     const removeContact = (id) => {
+        console.log("loading",loading);
         dispatch(deleteContact(id))
             .then(() => {
                 initFetch()
@@ -52,9 +50,15 @@ const ContactList = (props) => {
             }
 
             <div className="row">
+                {contact.length ===0 ? (<SkeletonLoader count={20}/>) : null
+
+                }
+
                 {contact &&
                 contact.map((contactData, index) => (
                     <div className="col-md-4">
+
+
                         <div className="card"
                              style={{
                                  borderWidth: "2px",
@@ -69,25 +73,25 @@ const ContactList = (props) => {
                                  key={index}>
 
                                 <div className="d-flex justify-content-between">
-                                    {
-                                        contactData.photo.endsWith(".jpg" || ".png") ?
-                                            <img src={contactData.photo}
-                                                 style={{
-                                                     width: "30px",
-                                                     height: "30px",
-                                                     borderRadius: "6px",
-                                                     marginRight: "10px"
-                                                 }}
-                                                 alt={contactData.firstName + " " + contactData.lastName}/> :
-                                            <img
-                                                src="https://tanzolymp.com/images/default-non-user-no-photo-1.jpg"
-                                                style={{
-                                                    width: "30px",
-                                                    height: "30px",
-                                                    borderRadius: "6px",
-                                                    marginRight: "10px"
-                                                }} alt="No Photo"/>
-                                    }
+                                    {/*{*/}
+                                    {/*    contactData.photo.endsWith(".jpg" || ".png") ?*/}
+                                    {/*        <img src={contactData.photo}*/}
+                                    {/*             style={{*/}
+                                    {/*                 width: "30px",*/}
+                                    {/*                 height: "30px",*/}
+                                    {/*                 borderRadius: "6px",*/}
+                                    {/*                 marginRight: "10px"*/}
+                                    {/*             }}*/}
+                                    {/*             alt={contactData.firstName + " " + contactData.lastName}/> :*/}
+                                    {/*        <img*/}
+                                    {/*            src="https://tanzolymp.com/images/default-non-user-no-photo-1.jpg"*/}
+                                    {/*            style={{*/}
+                                    {/*                width: "30px",*/}
+                                    {/*                height: "30px",*/}
+                                    {/*                borderRadius: "6px",*/}
+                                    {/*                marginRight: "10px"*/}
+                                    {/*            }} alt="No Photo"/>*/}
+                                    {/*}*/}
 
 
                                     <h5>{contactData.firstName + " " + contactData.lastName}</h5>

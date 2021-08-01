@@ -1,6 +1,7 @@
 import {
     CREATE_CONTACT,
     RETRIEVE_CONTACT,
+    RETRIEVE_CONTACT_LOADING,
     UPDATE_CONTACT,
     DELETE_CONTACT,
 } from "../actions/types";
@@ -11,6 +12,9 @@ const contactReducer = (contact = initialState, action) => {
     const { type, payload } = action;
 
     switch (type) {
+        case RETRIEVE_CONTACT_LOADING:
+            return [...contact, payload]
+
         case CREATE_CONTACT:
             return [...contact, payload];
 
